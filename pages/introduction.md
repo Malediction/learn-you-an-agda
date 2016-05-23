@@ -1,8 +1,9 @@
 -----
 title: Introduction
 date: 16th Febuary 2011
-prev:
+prev: _
 next: <a href="/pages/peano.html">Hello, Peano → </a>
+preamble: \usepackage{amsmath} 
 -----
 
 About this tutorial
@@ -12,7 +13,7 @@ Welcome to *Learn You an Agda and Achieve Enlightenment!*. If you're reading thi
 you're probably curious as to what Agda is, why you want to learn it, and in general what 
 the big deal is about dependently typed, purely functional programming.
 
-Inspired by BONUS, the writer of [Learn You a Haskell](learnyouahaskell.com), I decided
+Inspired by BONUS, the writer of [Learn You a Haskell](http://learnyouahaskell.com), I decided
 that I should write an approachable Agda tutorial that would introduce dependently typed
 programming to ordinary people rather than Ivory Tower Academics. Of course, seeing as
 *I* am one of those Ivory Tower Academics, this might not be easy. I am, however, prepared
@@ -30,7 +31,7 @@ a basic level to typed functional languages such as Haskell and ML, and so knowi
 language in the ML family will certainly make learning Agda a great deal easier. If you
 don't know a statically typed functional language, I recommend that you learn Haskell,
 as Agda has a close relationship with the Haskell ecosystem. If you're looking for a good
-Haskell tutorial, look no further than this book's companion, [Learn You a Haskell](learnyouahaskell.com).
+Haskell tutorial, look no further than this book's companion, [Learn You a Haskell](http://learnyouahaskell.com).
 You should only have to read the first few chapters of this book in order to get a feel
 for Agda.
 
@@ -90,22 +91,21 @@ type constructor can be parameterized by both the type of its contents *and* the
 the list in question (we'll be doing this later). This allows the compiler to check for you
 to make sure there are no cases where you attempt to call `head` on a potentially empty list,
 for example. Being able to include values inside a type, and use all the same value-level operations
-on them, is what makes Agda *dependently typed* - Not only can values have a type, 
-but types can have a value.
+on them, is what makes Agda *dependently typed* - Not only can we have types depend on other types (e.g `List`), we can also have types depend on *values* (e.g a length-indexed list). 
 
-In fact, seeing as the language of values and the language of types are the same, *any property*
+In fact, seeing as the language of values and the language of types are the same, (nearly) *any property*
 that you can express about a value can be expressed statically in its type, and machine checked
 by Agda. We can statically eliminate any error scenario from our program.
 
-Types are Proofs
+Types are Propositions
 ----------------
 
 <img class='img right' src='/static/owl.png' />
 
 If I can come up with a function of type `Foo -> Bar` (and Agda says that it's type correct)
-that means that I've, in addition to written a program, also written a proof by construction
-that, assuming some premise `Foo`, the judgement `Bar` holds (We'll touch more on proofs later - 
-I don't want to get bogged down in details just yet)
+that means that I've written not only a program, but also a proof by construction
+that, assuming some premise `Foo`, the judgement `Bar` holds. (We'll touch more
+on proofs later; I don't want to get bogged down in details just yet.)
 
 Seeing as our `Foo` and `Bar` can be as expressive as we like, this lets us prove *anything we
 want* about our program simply by exploiting this correspondence between proofs and programs -
@@ -170,23 +170,19 @@ Once you have Haskell and Emacs, there are three things you still need to do:
   "agda" to find out). If not or otherwise, simply use the Haskell platform's `cabal-install` tool
   to download, compile, and set up Agda.
 
-        $ cabal install agda agda-executable
+        $ cabal install Agda
 
 * Install Agda mode for emacs. Simply type in a command prompt (where Agda is in your `PATH`):
 
         $ agda-mode setup
 
-* Install Haskell mode for emacs. If Haskell mode is not available in your package manager, you
-  can [download Haskell mode](http://www.iro.umontreal.ca/μonnier/elisp/#haskell-mode) and install
-  it by adding to your `.emacs` file[^0]:
+* Compile Agda mode as well (you'll need to do this again if you update Agda):
 
-        (setq load-path (cons "/path/to/my/haskell/mode" load-path))
+        $ agda-mode compile
 
 By then you should be all set. To find out if everything went as well as expected, head on over
 to the next section, "Hello Peano!".
 
-
-[^0]: Adjusting the path as appropriate, of course.
 [^1]: Fans of C++ would know what I'm talking about here.
 [^2]: If only Agda existed when Fermat was around.
 

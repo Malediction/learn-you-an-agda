@@ -1,14 +1,16 @@
------
-title: Hello, Peano
-date: 16th Febuary 2011
-next: <a href="/pages/proofs.html">Propositions and Predicates →</a>
-prev: <a href="/pages/introduction.html">← Introduction</a>
------
+<div class=hidden>
+This shouldn't be visible
+</div>
+
 
 Definitions, Definitions
 ========================
 
-So, unlike the previous chapter, this chapter will actually involve some coding in Agda.
+So, unlike the previous chapter, this chapter will actually involve some coding in Agda. We start with a module name.
+
+\begin{code}
+module peano where
+\end{code}
 
 Most language tutorials start with the typical "Hello, World" example, but this is not really appropriate for a first example in Agda. Unlike other languages, which rely on a
 whole lot of primitive operations and special cases for basic constructs, Agda is very minimal - most of the "language constructs" are actually defined in libraries.
@@ -18,9 +20,20 @@ the whole numbers starting with zero and going up. Mathematics uses the symbol `
 that sets Agda apart from other languages is its extensive use of unicode to make mathematical constructs  more natural). To enter ℕ into emacs, type `\bn`. To enter the 
 unicode arrow (→), type `\->`.  I'm going to demonstrate this line by line, so bear with me.
 
-~~~{.agda}
-data ℕ : Set where
-~~~
+<div class=hidden>
+
+\begin{code}
+open import Agda.Primitive
+
+module Hidden0 where
+
+\end{code}
+
+</div>
+
+\begin{code}
+  data ℕ : Set where
+\end{code}
 
 To begin, we type `data ℕ`. The `data` keyword means we're defining a type - in this case, `ℕ`. For this example, we're specifying that this type, `ℕ`, is of type `Set` (that's what
 the colon means). 
@@ -35,7 +48,7 @@ Even `Set` (the type of our type `ℕ`) has a type: `Set₁`, which has a type `
 `Set` types mean later, but for now you can think of `Set` as the type we give to all the data types we use in our program.
 
 <div class="aside">
-This infinite heirarchy of types provides an elegant solution to [Russell's Paradox](http://en.wikipedia.org/wiki/Russell's_paradox). Seeing as for any ν∈ ℕ, `Set ν` contains
+This infinite heirarchy of types provides an elegant solution to <a href=http://en.wikipedia.org/wiki/Russell's_paradox>Russell's Paradox</a> . Seeing as for any ν∈ ℕ, `Set ν` contains
 only values "smaller" than ν, (for example, `Set₁` cannot contain `Set₁` or `Set₂`, only `Set`), Russell's problematic set (which contains itself) cannot exist and is not
 admissable.
 </div>
@@ -46,26 +59,34 @@ Structural Induction
 Okay, so, we've defined our type, but now we need to fill the type with values. While a type with no values does have its uses, a natural numbers type with no values is 
 categorically wrong. So, the first natural number we'll define is zero:
 
-~~~{.agda}
-  zero : ℕ 
-~~~
+<div class=hidden>
+
+\begin{code}
+module Hidden01 where
+\end{code}
+
+</div>
+
+\begin{code}
+  data ℕ : Set where
+    zero : ℕ 
+\end{code}
 
 Here we are simply declaring the term `zero` to be a member of our new type `ℕ`. We could continue to define more numbers this way:
 
-~~~{.agda}
-  zero  : ℕ 
-  one   : ℕ
-  two   : ℕ
-  three : ℕ 
-  four  : ℕ
-~~~
+\begin{code}
+    one   : ℕ
+    two   : ℕ
+    three : ℕ 
+    four  : ℕ
+\end{code}
 
 But we'd quickly find our text editor full of definitions and we'd be no closer to defining all the natural numbers than when we started. So, we should instead refer to a strict
 mathematical definition. The notation I'm using here should be familiar to anyone who knows set theory and/or first-order logic - don't panic if you don't know these things,
 we'll be developing models for similar things in Agda later, so you will be able to pick it up as we go along. 
 
-* Zero is a natural number (`0∈ℕ`). 
-* For any natural number `ν`, `ν + 1` is also a natural number. For convenience, We shall refer to `ν + 1` as `suc ν`[^1]. (`∀ν∈ℕ → suc ν∈ℕ`).
+* Zero is a natural number ($0\in\mathbb{N}$). 
+* For any natural number $n$, $n + 1$ is also a natural number. For convenience, We shall refer to $n + 1$ as $\mathtt{suc}\ n$[^1]. ($\forall n \in \mathbb{N}.\ \mathtt{suc}\ n \in \mathbb{N}$).
 
 This is called an *inductive definition* of natural numbers. We call it *inductive* because it consists of a *base* rule, where we define a fixed starting point,
 and an *inductive* rule that, when applied to an element of the set, *induces* the next element of the set. This is a very elegant way to define infinitely large sets. This way
@@ -73,25 +94,35 @@ of defining natural numbers was developed by a mathematician named Giuseppe Pean
 
 We will look at inductive *proof* in the coming chapters, which shares a similar structure.
 
-For the base case, we've already defined zero to be in ℕ by saying:
+For the base case, we've already defined zero to be in $\mathbb{N}$ by saying:
 
-~~~{.agda}
-data ℕ : Set where 
-  zero : ℕ
-~~~
+<div class=hidden>
+
+\begin{code}
+module Hidden where
+\end{code}
+
+</div>
+
+\begin{code}
+  data ℕ : Set where 
+    zero : ℕ
+\end{code}
 
 For the second point (the inductive rule), it gets a little more complicated. First let's take a look at the inductive rule definition in first order logic:
 
-    ∀ν ∈ ℕ → suc ν ∈ ℕ 
+<center>
+   $\forall n \in \mathbb{N}.\ \mathtt{suc}\ n \in \mathbb{N}$
+</center>
 
-This means, given a natural number `ν`, the constructor `suc` will return another natural number. So, in other words, `suc` could be considered a *function*
+This means, given a natural number `n`, the constructor `suc` will return another natural number. So, in other words, `suc` could be considered a *function*
 that, when given a natural number, produces the next natural number. This means that we can define the constructor `suc` like so:
 
-~~~{.agda}
+\begin{code}
 data ℕ : Set where 
   zero : ℕ
   suc  : ℕ → ℕ
-~~~
+\end{code}
 
 Now we can express the number one as `suc zero`, and the number two as `suc (suc zero)`, and the number three as `suc (suc (suc zero))`, and so on.
 
@@ -122,9 +153,9 @@ One, Two.. Five!
 
 Now we're going to define some arithmetic operations on our natural numbers. Let's try addition, first.
 
-~~~~{.agda}
+~~~{.agda}
 _+_ : ℕ → ℕ → ℕ 
-~~~~
+~~~
 
 Here I'm declaring a function. To start with, I give it a type[^2] - it takes two natural numbers, and returns a natural number. 
 
@@ -147,12 +178,12 @@ flexibility delivers great expressive power, but be careful about using it too m
 
 Now, let's implement this function by structural recursion[^4].
 
-~~~{.agda}
+\begin{code}
 _+_ : ℕ → ℕ → ℕ 
 zero + zero = zero
 zero + n    = n
 (suc n) + n′ = suc (n + n′)  -- use \' to input ′.
-~~~
+\end{code}
 
 Our First Check
 ===============
@@ -160,7 +191,7 @@ Our First Check
 Normally we'd run the program at this point to verify that it works, but in Agda one does that pretty rarely. Instead, what we do is get Agda to *check* our code. This checks
 that all our proof obligations have been met:
 
-* It checks your types. Types are how you encode proofs in Agda (although we haven't done any non-trivial proofs yet), so this is important.
+* It checks your types. Types are how you encode proof obligations in Agda (although we haven't done any non-trivial proofs yet), so this is important.
 * It checks that your program provably terminates. Checking that any program terminates is in general undecidable (see [The Halting Problem](http://en.wikipedia.org/wiki/Halting_problem)),
 but proof obligations can only be machine-checked by Agda if your program terminates. To circumvent this dilemma, Agda runs its checker only on *structural* recursion with 
 finite data structures, and warns that it can't check proof obligations if non-structural recursion is ever used. We will discuss this more in later chapters, but the only examples
@@ -169,7 +200,7 @@ presented in the early part of this book will be ones that Agda can already prov
 To run a check, type `C-c C-l` into emacs, or choose Load from the Agda menu. If your program checks correctly, there will be no error messages, no hole markers (yellow highlighting) and no
 orange-highlighted non-terminating sections. It should also say `Agda: Checked` at the bottom of the window, and you get syntax highlighting.
 
-Right now, our checks aren't all that meaningful - the only thing they prove is that our addition function does indeed take any natural number and produce a natural number, as
+Right now, our checks aren't all that meaningful - the only thing they prove is that our addition function does indeed take any two natural numbers and produce a natural number, as
 the type suggests. Later on, when we encode more information in our types, our checks can mean a lot more - even more than running and testing the program.
 
 "I Have Merely Proven It Correct"
@@ -178,11 +209,11 @@ the type suggests. Later on, when we encode more information in our types, our c
 To evaluate an expression (just to verify that it truly does work), we can type `C-c C-n` into emacs, or select "Evaluate term to normal form" from the Agda menu. Then, in the
 minibuffer, we can type an expression for 3 + 2:
 
-    (suc (suc (suc n))) + (suc (suc n))
+    (suc (suc (suc zero))) + (suc (suc zero))
 
 And we get the result (5):
 
-    (suc (suc (suc (suc (suc n)))))
+    (suc (suc (suc (suc (suc zero)))))
 
 In this chapter we have examined the Peano natural numbers, and defined some basic functions and data types in Agda. In the next chapter, we'll look at propositional logic, and
 how to encode logical proofs in Agda using this system.
